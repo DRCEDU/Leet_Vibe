@@ -15,6 +15,9 @@ This folder contains various dynamic programming challenges organized by difficu
 ### Advanced Level
 5. **[Longest Increasing Subsequence](./longest-increasing-subsequence.md)** - Subsequence problems
 
+### Tree DP
+6. **[Binary Tree Maximum Path Sum](./binary-tree-maximum-path-sum.md)** - Tree-based DP, finding the maximum path sum in a binary tree
+
 ## 🎯 Learning Path
 
 ### Phase 1: Fundamentals
