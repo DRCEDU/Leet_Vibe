@@ -1,0 +1,14 @@
+# Email Reader Script Dependencies
+# All dependencies are built-in Python libraries, so no external packages needed
+# This file is for documentation purposes
+
+# Built-in libraries used:
+# - imaplib (for IMAP connections)
+# - email (for email parsing)
+# - json (for saving emails)
+# - getpass (for secure password input)
+# - argparse (for command line arguments)
+# - typing (for type hints)
+# - datetime (for date handling)
+
+# No external dependencies required! 
