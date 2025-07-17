@@ -67,11 +67,18 @@ class HTMLToMarkdownConverter:
         if output_file:
             self.output_file = Path(output_file)
         else:
-            output_dir = self._ensure_directory(self.config.output_dir)
-            filename = self._sanitize_filename(f"{self.html_file_path.stem}.md")
-            self.output_file = output_dir / filename
+            # Check if custom output directory is specified
+            if hasattr(config, 'output_dir') and config.output_dir != 'output':
+                # Custom output directory specified
+                output_dir = self._ensure_directory(config.output_dir)
+                filename = self._sanitize_filename(f"{self.html_file_path.stem}.md")
+                self.output_file = output_dir / filename
+            else:
+                # Default: place output in same folder as input HTML file
+                filename = self._sanitize_filename(f"{self.html_file_path.stem}.md")
+                self.output_file = self.base_dir / filename
         
-        # Create images directory
+        # Create images directory - place relative to output file location
         self.images_dir = self._ensure_directory(
             self.output_file.parent / self.config.images_dir
         )
@@ -417,15 +424,15 @@ async def handle_list_tools() -> list[types.Tool]:
                     },
                     "output_file": {
                         "type": "string",
-                        "description": "Optional output markdown file path (defaults to auto-generated name)"
+                        "description": "Optional output markdown file path (defaults to same folder as input HTML file)"
                     },
                     "output_dir": {
                         "type": "string",
-                        "description": "Output directory for converted files (default: 'output')"
+                        "description": "Output directory for converted files (default: same folder as input HTML file)"
                     },
                     "images_dir": {
                         "type": "string",
-                        "description": "Directory name for processed images (default: 'images')"
+                        "description": "Directory name for processed images (default: 'images' in same folder as input HTML file)"
                     },
                     "preserve_images": {
                         "type": "boolean",
