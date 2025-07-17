@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "document-image-extractor": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "./document-image-extractor-mcp",
+        "run",
+        "document-image-extractor-mcp"
+      ],
+      "disabled": false,
+      "autoApprove": [
+        "list_supported_formats",
+        "validate_document",
+        "get_document_info"
+      ]
+    }
+  }
+}
