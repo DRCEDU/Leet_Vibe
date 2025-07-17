@@ -1,0 +1,14 @@
+{
+  "github.copilot.mcp.servers": {
+    "document-image-extractor": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/mnt/b/Users/cjdua/Github/Leet_Vibe/document-image-extractor-mcp",
+        "run",
+        "document-image-extractor-mcp"
+      ],
+      "cwd": "/mnt/b/Users/cjdua/Github/Leet_Vibe/document-image-extractor-mcp"
+    }
+  }
+}
