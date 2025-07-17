@@ -10,6 +10,15 @@
             ],
             "cwd": "/mnt/b/Users/cjdua/Github/Leet_Vibe/document-image-extractor-mcp",
             "env": {}
+        },
+        "mdconverter-mcp": {
+            "command": "/mnt/b/Users/cjdua/Github/Leet_Vibe/mdconverter-mcp/venv/bin/python",
+            "args": [
+                "-m", 
+                "mdconverter_mcp"
+            ],
+            "cwd": "/mnt/b/Users/cjdua/Github/Leet_Vibe/mdconverter-mcp",
+            "env": {}
         }
     }
 }

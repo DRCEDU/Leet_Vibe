@@ -1,0 +1,25 @@
+[project]
+name = "mdconverter-mcp"
+version = "0.1.0"
+description = "MCP server for converting HTML webpage packages to clean, well-formatted Markdown files"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mcp>=1.11.0",
+    "beautifulsoup4>=4.12.0",
+    "requests>=2.31.0",
+    "markdownify>=0.11.6",
+    "lxml>=4.9.0",
+    "html5lib>=1.1",
+]
+
+[[project.authors]]
+name = "CJ Duan"
+email = "vompute@dulun.com"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+mdconverter-mcp = "mdconverter_mcp:main"
