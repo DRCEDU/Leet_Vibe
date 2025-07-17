@@ -39,9 +39,11 @@ Restart VS Code to load the new MCP server configuration.
 Your MCP server provides 4 tools that Copilot can now use:
 
 #### 1. **Extract Document Images**
+
 ```
 "Extract all images from this PDF document: /path/to/document.pdf"
 "Can you extract images from my Word document and save them to a specific folder?"
+"Process this document and create a ZIP archive with the original and extracted images"
 ```
 
 #### 2. **Get Document Information**

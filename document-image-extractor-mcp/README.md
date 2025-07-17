@@ -9,18 +9,20 @@ A Model Context Protocol (MCP) server that provides tools for extracting images 
 - **Document Analysis**: Get metadata and image counts without extraction
 - **Format Validation**: Check document compatibility before processing
 - **Flexible Output**: Configurable output directories and file naming
+- **ZIP Archive Creation**: Automatically create ZIP files containing original document and extracted images
 
 ## Available Tools
 
 ### `extract_document_images`
-Extract all images from a PDF or Word document and save them as separate files.
+
+Extract all images from a PDF or Word document, save them as separate files, and create a ZIP archive containing both the original document and extracted images.
 
 **Parameters:**
 - `document_path` (required): Path to the document file (.pdf or .docx)
 - `output_dir` (optional): Directory to save extracted images
 - `min_image_size` (optional): Minimum image dimension for PDF extraction (default: 10)
 
-**Returns:** List of extracted image files with paths and metadata
+**Returns:** List of extracted image files with paths, metadata, and ZIP archive location
 
 ### `get_document_info`
 Get information about a document without extracting images.

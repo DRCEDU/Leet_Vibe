@@ -180,13 +180,14 @@ class WordImageExtractor:
 class DocumentExtractor:
     """Unified document image extractor for PDF and Word documents."""
     
-    def __init__(self, min_image_size: int = 10):
+    def __init__(self, min_image_size: int = 10, create_zip: bool = True):
         self.min_image_size = min_image_size
+        self.create_zip = create_zip
         self.pdf_extractor = PDFImageExtractor(min_image_size=min_image_size)
         self.word_extractor = WordImageExtractor()
     
-    def extract_images(self, document_path: str, output_dir: Optional[str] = None) -> Tuple[List[str], str]:
-        """Extract all images from a document."""
+    def extract_images(self, document_path: str, output_dir: Optional[str] = None) -> Tuple[List[str], str, Optional[str]]:
+        """Extract all images from a document and optionally create a ZIP file."""
         if not FileUtils.validate_file_exists(document_path):
             raise FileNotFoundError(f"Document not found: {document_path}")
         
@@ -208,7 +209,35 @@ class DocumentExtractor:
         else:  # .docx
             extracted_images = self.word_extractor.extract_images(document_path, output_dir)
         
-        return extracted_images, output_dir
+        # Create ZIP file by default if images were extracted
+        zip_path = None
+        if self.create_zip and extracted_images:
+            zip_path = self._create_zip_archive(document_path, extracted_images, output_dir)
+        
+        return extracted_images, output_dir, zip_path
+    
+    def _create_zip_archive(self, document_path: str, extracted_images: List[str], output_dir: str) -> str:
+        """Create a ZIP archive containing the original document and extracted images."""
+        doc_name = os.path.splitext(os.path.basename(document_path))[0]
+        zip_name = f"{doc_name}_Document_and_Images.zip"
+        zip_path = os.path.join(os.path.dirname(document_path), zip_name)
+        
+        try:
+            with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                # Add the original document
+                zipf.write(document_path, f"original_document/{os.path.basename(document_path)}")
+                
+                # Add all extracted images
+                for image_path in extracted_images:
+                    image_name = os.path.basename(image_path)
+                    zipf.write(image_path, f"extracted_images/{image_name}")
+            
+            logger.info(f"Created ZIP archive: {zip_path}")
+            return zip_path
+            
+        except Exception as e:
+            logger.error(f"Error creating ZIP archive: {e}")
+            return None
     
     def get_document_info(self, document_path: str) -> dict:
         """Get information about a document."""
@@ -235,7 +264,7 @@ async def handle_list_tools() -> list[types.Tool]:
     return [
         types.Tool(
             name="extract_document_images",
-            description="Extract all images from a PDF or Word document and save them as separate files",
+            description="Extract all images from a PDF or Word document, save them as separate files, and create a ZIP archive containing both the original document and extracted images",
             inputSchema={
                 "type": "object",
                 "properties": {
@@ -315,10 +344,10 @@ async def handle_call_tool(
         try:
             # Update extractor settings
             global extractor
-            extractor = DocumentExtractor(min_image_size=min_image_size)
+            extractor = DocumentExtractor(min_image_size=min_image_size, create_zip=True)
             
             # Extract images
-            extracted_images, actual_output_dir = extractor.extract_images(
+            extracted_images, actual_output_dir, zip_path = extractor.extract_images(
                 document_path, 
                 output_dir if output_dir else None
             )
@@ -329,13 +358,16 @@ async def handle_call_tool(
                 "output_directory": actual_output_dir,
                 "extracted_images": len(extracted_images),
                 "image_files": [os.path.basename(img) for img in extracted_images],
-                "full_paths": extracted_images
+                "full_paths": extracted_images,
+                "zip_file": zip_path
             }
+            
+            zip_info = f"\n📦 ZIP Archive: {zip_path}" if zip_path else ""
             
             return [types.TextContent(
                 type="text", 
                 text=f"Successfully extracted {len(extracted_images)} images from {os.path.basename(document_path)}\n" +
-                     f"Output directory: {actual_output_dir}\n" +
+                     f"Output directory: {actual_output_dir}{zip_info}\n" +
                      f"Files: {', '.join([os.path.basename(img) for img in extracted_images])}\n\n" +
                      f"Full result: {json.dumps(result, indent=2)}"
             )]
